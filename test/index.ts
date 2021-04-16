@@ -1,9 +1,9 @@
-import assert from 'assert'
+import assert from "assert";
 
-describe('index.js', () => {
-  describe('init', () => {
-    it('must be valid', () => {
-      assert.ok(true)
-    })
-  })
-})
+describe("index.js", () => {
+  describe("init", () => {
+    it("must be valid", () => {
+      assert.ok(true);
+    });
+  });
+});
