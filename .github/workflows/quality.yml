@@ -21,4 +21,4 @@ jobs:
         node-version: '14'
     - run: npm ci
     - run: npm run dep
-    # - run: npm test
+    - run: npm test
