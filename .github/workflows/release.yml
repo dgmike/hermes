@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-    
+
       - name: Cache
         uses: actions/cache@v2
         with:
@@ -31,4 +31,4 @@ jobs:
       - name: Create version
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: printenv && ./node_modules/.bin/semantic-release
+        run: ./node_modules/.bin/semantic-release
