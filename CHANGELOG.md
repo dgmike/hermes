@@ -1,3 +1,12 @@
+# [1.6.0](https://github.com/dgmike/hermes/compare/v1.5.0...v1.6.0) (2021-04-18)
+
+
+### Features
+
+* added linter ([e3bc2cd](https://github.com/dgmike/hermes/commit/e3bc2cd152023c1bb584fd2f76b32944a976be16))
+* added test suite ([1e88785](https://github.com/dgmike/hermes/commit/1e887850fcb37172396078d7224de27c2bcc5064))
+* lint action added ([25166e4](https://github.com/dgmike/hermes/commit/25166e45e1b756d1fdebcfebf25638b5db7ec99f))
+
 # [1.5.0](https://github.com/dgmike/hermes/compare/v1.4.0...v1.5.0) (2021-04-18)
 
 
