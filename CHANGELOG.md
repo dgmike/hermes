@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/dgmike/hermes/compare/v1.4.0...v1.5.0) (2021-04-18)
+
+
+### Features
+
+* added a simple readme file ([bcc5b55](https://github.com/dgmike/hermes/commit/bcc5b55be6eee4dc85d303618729aa1dd41566b2))
+
 # [1.4.0](https://github.com/dgmike/hermes/compare/v1.3.0...v1.4.0) (2021-04-18)
 
 
