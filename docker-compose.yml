@@ -9,8 +9,14 @@ services:
       - .:/app
     ports: 
       - 3000:3000
+      - 9229:9229
     depends_on: 
       - database
+    environment: 
+      DB_HOST: database
+      DB_USER: hermes
+      DB_PASS: hermes
+      DB_NAME: hermes
 
   database:
     image: postgres

@@ -1,29 +1,41 @@
+import * as bcrypt from "bcrypt";
 import { Response } from "express";
 import * as jwt from "jsonwebtoken";
+import { Knex } from "knex";
 import { Body, HttpCode, JsonController, Post, Res } from "routing-controllers";
+import { UsernameModel } from "../models";
 import SignInValidation from "../validations/signin.validation";
 
 @JsonController("/api")
 class AuthenticationController {
   @Post("/signin")
   @HttpCode(201)
-  signIn(
+  async signIn(
     @Body({ validate: true }) body: SignInValidation,
     @Res() res: Response
-  ): { token: string } | Response {
-    if (body.login === "admin" && body.password === "admin") {
-      const data = {
-        username: body.login,
-        name: "Administrator",
-        roles: ["admin"],
-      };
-      const secretKey = "secretKey";
-      const token = jwt.sign(data, secretKey, { expiresIn: "5m" });
-      return { token };
+  ): Promise<{ token: string } | Response> {
+    const db: Knex = res.app.locals["db"];
+
+    const username = await db<UsernameModel>("usernames")
+      .where({ username: body.login })
+      .first();
+
+    if (!username || !bcrypt.compareSync(body.password, username.password)) {
+      return res
+        .status(422)
+        .json({ error: true, message: "invalid credentials" });
     }
-    return res
-      .status(422)
-      .json({ error: true, message: "invalid credentials" });
+
+    const data = {
+      username: username.username,
+      name: username.name,
+      roles: JSON.parse(username.roles),
+    };
+
+    const secretKey = "secretKey";
+    const token = jwt.sign(data, secretKey, { expiresIn: "5m" });
+
+    return { token };
   }
 }
 
