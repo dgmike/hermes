@@ -1,17 +1,38 @@
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { Application, Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import {
+  Action,
   createExpressServer,
   getMetadataArgsStorage,
 } from "routing-controllers";
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import swaggerUi from "swagger-ui-express";
 import database from "./configurations/database";
-import { AuthenticationController, RootController } from "./controllers";
+import {
+  AuthenticationController,
+  RootController,
+  UsersController,
+} from "./controllers";
 
 export const createApp = async (): Promise<Application> => {
   const app: Application = createExpressServer({
-    controllers: [RootController, AuthenticationController],
+    controllers: [RootController, AuthenticationController, UsersController],
+    authorizationChecker: async (action: Action): Promise<boolean> => {
+      try {
+        const authorizationHeader: string | undefined =
+          action.request.headers["authorization"];
+
+        if (!authorizationHeader?.match(/^Bearer \w[\w.]+\w$/)) {
+          return false;
+        }
+        const token = authorizationHeader.substr(7);
+        const verify = jwt.verify(token, process.env["JWT_SECRET"] || "");
+        return !!verify;
+      } catch (err) {
+        return false;
+      }
+    },
   });
 
   const storage = getMetadataArgsStorage();
@@ -22,7 +43,15 @@ export const createApp = async (): Promise<Application> => {
     storage,
     {},
     {
-      components: { schemas },
+      components: {
+        securitySchemes: {
+          BearerAuth: {
+            type: "http",
+            scheme: "bearer",
+          },
+        },
+        schemas,
+      },
     }
   );
 

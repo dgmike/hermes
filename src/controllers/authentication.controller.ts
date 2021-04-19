@@ -16,7 +16,7 @@ class AuthenticationController {
   ): Promise<{ token: string } | Response> {
     const db: Knex = res.app.locals["db"];
 
-    const username = await db<UsernameModel>("usernames")
+    const username = await db<UsernameModel>("users")
       .where({ username: body.login })
       .first();
 
@@ -29,10 +29,10 @@ class AuthenticationController {
     const data = {
       username: username.username,
       name: username.name,
-      roles: JSON.parse(username.roles),
+      roles: username.roles,
     };
 
-    const secretKey = "secretKey";
+    const secretKey = process.env["JWT_SECRET"] || "";
     const token = jwt.sign(data, secretKey, { expiresIn: "5m" });
 
     return { token };
