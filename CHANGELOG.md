@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/dgmike/hermes/compare/v1.8.0...v1.9.0) (2021-04-19)
+
+
+### Features
+
+* better user validations added and toJSON method in userValidation added ([44cf07e](https://github.com/dgmike/hermes/commit/44cf07eb40e1e1f06dd9c377f56c98227a3178a8))
+
 # [1.8.0](https://github.com/dgmike/hermes/compare/v1.7.0...v1.8.0) (2021-04-19)
 
 
