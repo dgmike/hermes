@@ -1,0 +1,22 @@
+version: "3.8"
+
+services: 
+  app:
+    image: node:14
+    command: npm run dev
+    working_dir: /app
+    volumes: 
+      - .:/app
+    ports: 
+      - 3000:3000
+    depends_on: 
+      - database
+
+  database:
+    image: postgres
+    volumes:
+      - ./postgres-initdb:/docker-entrypoint-initdb.d
+    environment: 
+      POSTGRES_USER: hermes
+      POSTGRES_PASSWORD: hermes
+      POSTGRES_DB: hermes

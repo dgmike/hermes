@@ -1,3 +1,4 @@
+import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { Request, Response } from "express";
 import {
   createExpressServer,
@@ -5,14 +6,23 @@ import {
 } from "routing-controllers";
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import swaggerUi from "swagger-ui-express";
-import { RootController } from "./controllers/root.controller";
+import { AuthenticationController, RootController } from "./controllers";
 
 const app = createExpressServer({
-  controllers: [RootController],
+  controllers: [RootController, AuthenticationController],
 });
 
 const storage = getMetadataArgsStorage();
-const swaggerSpec = routingControllersToSpec(storage);
+const schemas = validationMetadatasToSchemas({
+  refPointerPrefix: "#/components/schemas/",
+});
+const swaggerSpec = routingControllersToSpec(
+  storage,
+  {},
+  {
+    components: { schemas },
+  }
+);
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
