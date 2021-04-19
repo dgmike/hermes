@@ -15,7 +15,7 @@ services:
   database:
     image: postgres
     volumes:
-      - ./postgres-initdb:/docker-entrypoint-initdb.d
+      - ./postgres-initdb.d:/docker-entrypoint-initdb.d
     environment: 
       POSTGRES_USER: hermes
       POSTGRES_PASSWORD: hermes
