@@ -1,3 +1,13 @@
+# [1.7.0](https://github.com/dgmike/hermes/compare/v1.6.0...v1.7.0) (2021-04-19)
+
+
+### Features
+
+* create controllers with swagger ([fe2c0b7](https://github.com/dgmike/hermes/commit/fe2c0b7a8ffabc3c59dae76de492ec25e4e755a9))
+* created database on docker-compose ([f58d162](https://github.com/dgmike/hermes/commit/f58d1625d75f5fdcde4bff7d1c88c1611da92ac2))
+* login controllers and database on container addded ([1a2caf6](https://github.com/dgmike/hermes/commit/1a2caf629087fb2f926fd158677c6e9a39357ed3))
+* sigin using database implemented ([b18715e](https://github.com/dgmike/hermes/commit/b18715ea5a0483a180c490872e030ff4b3905c17))
+
 # [1.6.0](https://github.com/dgmike/hermes/compare/v1.5.0...v1.6.0) (2021-04-18)
 
 
