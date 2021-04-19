@@ -1,10 +1,17 @@
-import { IsDate, IsPositive, IsString } from "class-validator";
+import { IsDate, IsEnum, IsPositive, IsString } from "class-validator";
+
+export enum UserRoles {
+  ADMIN = "ADMIN",
+}
 
 export interface UserBaseModel {
-  user_id: number | undefined;
+  user_id?: number;
   username: string;
   name: string;
-  roles: string[];
+  roles: UserRoles[] | string;
+}
+
+export interface UserWithCreateAndUpdateModel extends UserBaseModel {
   created_at: Date;
   updated_at: Date;
 }
@@ -23,8 +30,8 @@ export class UserBaseSchema implements UserBaseModel {
   @IsString()
   name = "";
 
-  @IsString({ each: true })
-  roles: string[] = [];
+  @IsEnum(UserRoles, { each: true })
+  roles: UserRoles[] = [];
 
   @IsDate()
   created_at = new Date();

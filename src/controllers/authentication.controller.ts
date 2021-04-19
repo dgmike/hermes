@@ -33,7 +33,7 @@ class AuthenticationController {
     };
 
     const secretKey = process.env["JWT_SECRET"] || "";
-    const token = jwt.sign(data, secretKey, { expiresIn: "5m" });
+    const token = jwt.sign(data, secretKey, { expiresIn: "30m" });
 
     return { token };
   }

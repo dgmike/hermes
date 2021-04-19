@@ -23,13 +23,14 @@ export const createApp = async (): Promise<Application> => {
         const authorizationHeader: string | undefined =
           action.request.headers["authorization"];
 
-        if (!authorizationHeader?.match(/^Bearer \w[\w.]+\w$/)) {
-          return false;
+        if (!authorizationHeader?.match(/^Bearer \w[\w.-]+\w$/)) {
+          throw new Error("Authorization does not match");
         }
         const token = authorizationHeader.substr(7);
         const verify = jwt.verify(token, process.env["JWT_SECRET"] || "");
         return !!verify;
       } catch (err) {
+        console.log("Error:", err);
         return false;
       }
     },
