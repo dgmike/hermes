@@ -1,4 +1,3 @@
-import * as bcrypt from "bcrypt";
 import { Response } from "express";
 import { Knex } from "knex";
 import {
@@ -49,11 +48,9 @@ class UsersController {
     @Body({ validate: true }) body: CreateUserValidation
   ): Promise<undefined> {
     const db: Knex = res.app.locals["db"];
-    const password = bcrypt.hashSync(body.password, bcrypt.genSaltSync());
     const userId = await db<UsernameModel>("users")
       .returning("user_id")
-      .insert({ ...body, password, roles: JSON.stringify(body.roles) });
-    console.log(`id: ${userId}`);
+      .insert(body.toJSON());
     res.location(`/api/users/${userId}`);
     return;
   }

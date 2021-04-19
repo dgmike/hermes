@@ -1,10 +1,13 @@
-import { IsEnum, IsString, Matches, MinLength } from "class-validator";
+import * as bcrypt from "bcrypt";
+import { ArrayNotEmpty, IsEnum, IsString, Matches, MinLength, IsNotEmpty } from "class-validator";
 import { UserBaseModel, UserRoles } from "../models";
 
 export class CreateUserValidation implements UserBaseModel {
+  @IsNotEmpty()
   @IsString()
   name = "";
 
+  @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @Matches(/^[a-z][a-z0-9_.-]+[a-z]+$/, {
@@ -14,9 +17,22 @@ export class CreateUserValidation implements UserBaseModel {
   @Matches(/[a-z]$/, { message: "must end with letter" })
   username = "";
 
+  @IsNotEmpty()
   @IsString()
   password = "";
 
+  @ArrayNotEmpty()
   @IsEnum(UserRoles, { each: true })
   roles: UserRoles[] = [];
+
+  toJSON() {
+    const password = bcrypt.hashSync(this.password, bcrypt.genSaltSync());
+
+    return {
+      password,
+      name: this.name,
+      username: this.username,
+      roles: JSON.stringify(this.roles),
+    };
+  }
 }
