@@ -1,3 +1,11 @@
+# [1.8.0](https://github.com/dgmike/hermes/compare/v1.7.0...v1.8.0) (2021-04-19)
+
+
+### Features
+
+* added users route with authorization token and roles as JSON in database updated ([fd367d7](https://github.com/dgmike/hermes/commit/fd367d7a66a271e3c6aba0e8ab8a40aabdebcaad))
+* possibility to create users ([0dfd1d4](https://github.com/dgmike/hermes/commit/0dfd1d408618bdde4fe01386f924409e073581da))
+
 # [1.7.0](https://github.com/dgmike/hermes/compare/v1.6.0...v1.7.0) (2021-04-19)
 
 
