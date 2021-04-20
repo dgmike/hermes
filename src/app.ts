@@ -13,11 +13,17 @@ import {
   AuthenticationController,
   RootController,
   UsersController,
+  ClientsController,
 } from "./controllers";
 
 export const createApp = async (): Promise<Application> => {
   const app: Application = createExpressServer({
-    controllers: [RootController, AuthenticationController, UsersController],
+    controllers: [
+      RootController,
+      AuthenticationController,
+      UsersController,
+      ClientsController,
+    ],
     authorizationChecker: async (action: Action): Promise<boolean> => {
       try {
         const authorizationHeader: string | undefined =
