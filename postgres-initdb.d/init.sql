@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 INSERT INTO users (username, name, password, roles) VALUES
-    ('admin', 'Administrator', '$2b$10$vNvn7F.oXnu2t3R8favFj.Uuk5phURXU0If4JW9mq3jBhp1NO9roi', '["admin"]')
+    ('admin', 'Administrator', '$2b$10$vNvn7F.oXnu2t3R8favFj.Uuk5phURXU0If4JW9mq3jBhp1NO9roi', '["ADMIN"]')
     ON CONFLICT (username) DO NOTHING;

@@ -1,5 +1,12 @@
 import * as bcrypt from "bcrypt";
-import { ArrayNotEmpty, IsEnum, IsString, Matches, MinLength, IsNotEmpty } from "class-validator";
+import {
+  ArrayNotEmpty,
+  IsEnum,
+  IsString,
+  Matches,
+  MinLength,
+  IsNotEmpty,
+} from "class-validator";
 import { UserBaseModel, UserRoles } from "../models";
 
 export class CreateUserValidation implements UserBaseModel {
@@ -25,7 +32,7 @@ export class CreateUserValidation implements UserBaseModel {
   @IsEnum(UserRoles, { each: true })
   roles: UserRoles[] = [];
 
-  toJSON() {
+  toJSON(): UserBaseModel & { password: string; roles: string } {
     const password = bcrypt.hashSync(this.password, bcrypt.genSaltSync());
 
     return {
