@@ -6,6 +6,7 @@ import {
   Get,
   JsonController,
   OnUndefined,
+  Param,
   Post,
   QueryParam,
   Res,
@@ -83,6 +84,17 @@ class ClientsController {
       return;
     }
     res.location(`/api/clients/${insertResult}`);
+  }
+
+  @Get("/:id_client")
+  @ResponseSchema(CompleteClientModel)
+  async fetchOne(
+    @Res() res: Response,
+    @Param("id_client") id: number
+  ): Promise<CompleteClientSchema> {
+    const db = this.db<CompleteClientSchema>(res.app);
+    const resource = await db.where("client_id", id).first();
+    return resource;
   }
 
   private offsetAndLimit(
