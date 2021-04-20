@@ -1,19 +1,32 @@
 import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Application, Response } from "express";
 import { Knex } from "knex";
-import { Get, JsonController, QueryParam, Res } from "routing-controllers";
+import {
+  Body,
+  Get,
+  JsonController,
+  OnUndefined,
+  Post,
+  QueryParam,
+  Res,
+} from "routing-controllers";
 import { ResponseSchema } from "routing-controllers-openapi";
 import { decorate, mix } from "ts-mixer";
 
-interface ClientSchema {
+interface ClientIdentiableSchema {
   client_id?: number | undefined;
+}
+
+class ClientIdentiableModel implements ClientIdentiableSchema {
+  @decorate(IsNumber())
+  client_id = undefined;
+}
+
+interface ClientSchema extends ClientIdentiableSchema {
   name?: string | undefined;
 }
 
 class ClientBasicModel implements ClientSchema {
-  @decorate(IsNumber())
-  client_id = undefined;
-
   @decorate(IsString())
   @decorate(IsNotEmpty())
   name = undefined;
@@ -34,7 +47,7 @@ class TimestampableModel implements TimestampsSchema {
 
 interface CompleteClientSchema extends ClientSchema, TimestampsSchema {}
 
-@mix(ClientBasicModel, TimestampableModel)
+@mix(ClientIdentiableModel, ClientBasicModel, TimestampableModel)
 class CompleteClientModel implements CompleteClientSchema {}
 
 // @Authorized()
@@ -53,6 +66,23 @@ class ClientsController {
       .select("client_id", "name", "created_at", "updated_at")
       .limit(limit)
       .offset(offset);
+  }
+
+  @Post()
+  @OnUndefined(201)
+  async create(
+    @Res() res: Response,
+    @Body({ validate: true }) body: ClientBasicModel
+  ): Promise<void | string> {
+    const db = this.db<CompleteClientSchema>(res.app);
+    const [insertResult] = await db.insert(body, "client_id").debug(true);
+    if (!insertResult) {
+      res.status(422).json({
+        error: "invalid data",
+      });
+      return;
+    }
+    res.location(`/api/clients/${insertResult}`);
   }
 
   private offsetAndLimit(
