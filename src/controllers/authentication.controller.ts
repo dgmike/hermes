@@ -3,7 +3,7 @@ import { Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { Knex } from "knex";
 import { Body, HttpCode, JsonController, Post, Res } from "routing-controllers";
-import { UsernameModel } from "../models";
+import { UserModel } from "../models";
 import SignInValidation from "../validations/signin.validation";
 
 @JsonController("/api")
@@ -16,7 +16,7 @@ class AuthenticationController {
   ): Promise<{ token: string } | Response> {
     const db: Knex = res.app.locals["db"];
 
-    const username = await db<UsernameModel>("users")
+    const username = await db<UserModel>("users")
       .where({ username: body.login })
       .first();
 

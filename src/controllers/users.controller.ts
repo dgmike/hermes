@@ -16,7 +16,7 @@ import {
 import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
 import {
   UserBaseSchema,
-  UsernameModel,
+  UserModel,
   UserWithCreateAndUpdateModel,
 } from "../models";
 import { CreateUserValidation } from "../validations/user.validation";
@@ -54,7 +54,7 @@ class UsersController {
     @Body({ validate: true }) body: CreateUserValidation
   ): Promise<undefined> {
     const db: Knex = res.app.locals["db"];
-    const userId = await db<UsernameModel>("users")
+    const userId = await db<UserModel>("users")
       .returning("user_id")
       .insert(body.toJSON());
     res.location(`/api/users/${userId}`);
@@ -94,7 +94,7 @@ class UsersController {
     @Body({ validate: true }) body: CreateUserValidation
   ): Promise<UserBaseSchema | undefined> {
     const db: Knex = res.app.locals["db"];
-    const found = await db<UsernameModel>("users").where({ user_id }).count();
+    const found = await db<UserModel>("users").where({ user_id }).count();
     if (!found) {
       return undefined;
     }
@@ -106,7 +106,7 @@ class UsersController {
       "created_at",
       "updated_at",
     ];
-    const [user] = await db<UsernameModel>("users")
+    const [user] = await db<UserModel>("users")
       .where({ user_id })
       .update(body.toJSON(), fields);
     return user;
@@ -121,7 +121,7 @@ class UsersController {
     @Param("user_id") user_id: number
   ): Promise<{ ok: boolean } | undefined> {
     const db: Knex = res.app.locals["db"];
-    const found = await db<UsernameModel>("users")
+    const found = await db<UserModel>("users")
       .where({ user_id })
       .count()
       .first();
@@ -129,7 +129,7 @@ class UsersController {
     if (!count) {
       return undefined;
     }
-    await db<UsernameModel>("users").where({ user_id }).delete();
+    await db<UserModel>("users").where({ user_id }).delete();
     return { ok: true };
   }
 }

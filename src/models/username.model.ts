@@ -16,7 +16,7 @@ export interface UserWithCreateAndUpdateModel extends UserBaseModel {
   updated_at: Date;
 }
 
-export interface UsernameModel extends UserBaseModel {
+export interface UserModel extends UserBaseModel {
   password: string;
 }
 
