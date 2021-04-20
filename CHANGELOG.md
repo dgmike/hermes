@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/dgmike/hermes/compare/v1.9.0...v1.10.0) (2021-04-20)
+
+
+### Features
+
+* finalize CRUD of users ([c316146](https://github.com/dgmike/hermes/commit/c316146b0971a50f02efcd5e2d1f440fd5152187))
+
 # [1.9.0](https://github.com/dgmike/hermes/compare/v1.8.0...v1.9.0) (2021-04-19)
 
 
