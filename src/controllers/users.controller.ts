@@ -24,9 +24,9 @@ import { CreateUserValidation } from "../validations/user.validation";
 @OpenAPI({
   security: [{ BearerAuth: [] }],
 })
+@Authorized()
 @JsonController("/api/users")
 class UsersController {
-  @Authorized()
   @Get()
   @ResponseSchema(UserBaseSchema, { isArray: true })
   async findAll(@Res() res: Response): Promise<UserWithCreateAndUpdateModel[]> {
@@ -45,7 +45,6 @@ class UsersController {
     return users;
   }
 
-  @Authorized()
   @Post()
   @OnUndefined(201)
   async create(
@@ -61,7 +60,6 @@ class UsersController {
     return;
   }
 
-  @Authorized()
   @Get("/:user_id")
   @ResponseSchema(UserBaseSchema)
   @OnUndefined(404)
@@ -84,7 +82,6 @@ class UsersController {
     return user;
   }
 
-  @Authorized()
   @Patch("/:user_id")
   @ResponseSchema(UserBaseSchema)
   @OnUndefined(404)
@@ -112,7 +109,6 @@ class UsersController {
     return user;
   }
 
-  @Authorized()
   @Delete("/:user_id")
   @HttpCode(200)
   @OnUndefined(404)
