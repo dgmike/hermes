@@ -1,3 +1,11 @@
+# [1.11.0](https://github.com/dgmike/hermes/compare/v1.10.0...v1.11.0) (2021-04-21)
+
+
+### Features
+
+* added Authorized annotation instead each method ([333cc9b](https://github.com/dgmike/hermes/commit/333cc9b73aaead7e4ef1cc8d50324ea6c6742394))
+* define clients controller ([81248d3](https://github.com/dgmike/hermes/commit/81248d329372e230ba4de582081f0cdbd30ec593))
+
 # [1.10.0](https://github.com/dgmike/hermes/compare/v1.9.0...v1.10.0) (2021-04-20)
 
 
