@@ -1,3 +1,13 @@
+# [1.13.0](https://github.com/dgmike/hermes/compare/v1.12.0...v1.13.0) (2021-04-22)
+
+
+### Features
+
+* added update client ([1cac0e0](https://github.com/dgmike/hermes/commit/1cac0e032ee0a31ea841d3f09c3c1b7954c3df7d))
+* delete action for clients API ([f013c88](https://github.com/dgmike/hermes/commit/f013c88cd70cd30a2a025a2793e7a4eb23d58c6f))
+* middleware to check if resource exists added ([0729263](https://github.com/dgmike/hermes/commit/0729263144ecc52b886c41f538a01b8ace81b95c))
+* schemas, models and middlewares separated from controller ([9a9d75e](https://github.com/dgmike/hermes/commit/9a9d75e7f1a691d145aa52e8e168a88745f1f1f6))
+
 # [1.12.0](https://github.com/dgmike/hermes/compare/v1.11.0...v1.12.0) (2021-04-22)
 
 
