@@ -21,3 +21,5 @@ CREATE TABLE IF NOT EXISTS clients (
 
 INSERT INTO clients (client_id, name) VALUES (1, 'Michael')
     ON CONFLICT (client_id) DO NOTHING;
+
+ALTER SEQUENCE clients_client_id_seq RESTART WITH 2;

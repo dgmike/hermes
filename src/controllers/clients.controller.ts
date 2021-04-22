@@ -1,12 +1,14 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Allow, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Application, Response } from "express";
 import { Knex } from "knex";
 import {
   Body,
   Get,
+  HttpCode,
   JsonController,
   OnUndefined,
   Param,
+  Patch,
   Post,
   QueryParam,
   Res,
@@ -28,9 +30,16 @@ interface ClientSchema extends ClientIdentiableSchema {
 }
 
 class ClientBasicModel implements ClientSchema {
+  @decorate(Allow())
   @decorate(IsString())
   @decorate(IsNotEmpty())
   name = undefined;
+
+  toJSON() {
+    return {
+      name: this.name,
+    };
+  }
 }
 
 interface TimestampsSchema {
@@ -50,6 +59,20 @@ interface CompleteClientSchema extends ClientSchema, TimestampsSchema {}
 
 @mix(ClientIdentiableModel, ClientBasicModel, TimestampableModel)
 class CompleteClientModel implements CompleteClientSchema {}
+
+class NotFoundModel {
+  @IsString()
+  message = "Resource not found";
+}
+
+const resourceNotFound = (): { message: string } => {
+  const response = { message: "Resource not found" };
+  Object.defineProperty(response, "httpCode", {
+    enumerable: false,
+    value: 404,
+  });
+  return response;
+};
 
 // @Authorized()
 @JsonController("/api/clients")
@@ -74,9 +97,9 @@ class ClientsController {
   async create(
     @Res() res: Response,
     @Body({ validate: true }) body: ClientBasicModel
-  ): Promise<void | string> {
+  ): Promise<void> {
     const db = this.db<CompleteClientSchema>(res.app);
-    const [insertResult] = await db.insert(body, "client_id").debug(true);
+    const [insertResult] = await db.insert(body.toJSON(), "client_id");
     if (!insertResult) {
       res.status(422).json({
         error: "invalid data",
@@ -95,6 +118,29 @@ class ClientsController {
     const db = this.db<CompleteClientSchema>(res.app);
     const resource = await db.where("client_id", id).first();
     return resource;
+  }
+
+  @Patch("/:id_client", { transformRequest: true })
+  @HttpCode(204)
+  @ResponseSchema(NotFoundModel, { statusCode: 404 })
+  @OnUndefined(resourceNotFound)
+  async update(
+    @Res() res: Response,
+    @Param("id_client") id: number,
+    @Body({ validate: true }) body: ClientBasicModel
+  ): Promise<undefined | unknown> {
+    const db = this.db<CompleteClientSchema>(res.app);
+    const { count: resourceCount }: { count: string } = await db
+      .where("client_id", id)
+      .count()
+      .first();
+
+    if (!parseInt(resourceCount)) {
+      return;
+    }
+
+    await db.where("client_id", id).update(body.toJSON());
+    return null;
   }
 
   private offsetAndLimit(
