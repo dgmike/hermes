@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/dgmike/hermes/compare/v1.14.0...v1.14.1) (2021-04-22)
+
+
+### Bug Fixes
+
+* formating ([37e3850](https://github.com/dgmike/hermes/commit/37e3850a654ecf836c73d6e8e86c0beb293f00a8))
+
 # [1.14.0](https://github.com/dgmike/hermes/compare/v1.13.0...v1.14.0) (2021-04-22)
 
 
