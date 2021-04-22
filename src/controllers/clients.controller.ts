@@ -3,6 +3,7 @@ import { Application, NextFunction, Request, Response } from "express";
 import { Knex } from "knex";
 import {
   Body,
+  Delete,
   ExpressMiddlewareInterface,
   Get,
   HttpCode,
@@ -67,21 +68,11 @@ class NotFoundModel {
   message = "Resource not found";
 }
 
-const resourceNotFound = (): { message: string } => {
-  const response = { message: "Resource not found" };
-  Object.defineProperty(response, "httpCode", {
-    enumerable: false,
-    value: 404,
-  });
-  return response;
-};
-
 class ClientExistsMiddleware implements ExpressMiddlewareInterface {
   async use(req: Request, res: Response, next: NextFunction): Promise<void> {
     const db: Knex = req.app.locals["db"];
     const countResult = await db<CompleteClientSchema>("clients")
       .where("client_id", req.params["client_id"])
-      .debug(true)
       .count()
       .first();
 
@@ -133,28 +124,38 @@ class ClientsController {
   @UseBefore(ClientExistsMiddleware)
   @Get("/:client_id")
   @ResponseSchema(CompleteClientModel)
+  @ResponseSchema(NotFoundModel, { statusCode: 404 })
   async fetchOne(
     @Res() res: Response,
     @Param("client_id") id: number
   ): Promise<CompleteClientSchema> {
     const db = this.db<CompleteClientSchema>(res.app);
-    const resource = await db.where("client_id", id).first();
-    return resource;
+    return db.where("client_id", id).first();
   }
 
   @UseBefore(ClientExistsMiddleware)
-  @Patch("/:client_id", { transformRequest: true })
+  @Patch("/:client_id")
   @HttpCode(204)
   @ResponseSchema(NotFoundModel, { statusCode: 404 })
-  @OnUndefined(resourceNotFound)
   async update(
     @Res() res: Response,
     @Param("client_id") id: number,
     @Body({ validate: true }) body: ClientBasicModel
-  ): Promise<undefined | unknown> {
+  ): Promise<void> {
     const db = this.db<CompleteClientSchema>(res.app);
     await db.where("client_id", id).update(body.toJSON());
-    return null;
+  }
+
+  @UseBefore(ClientExistsMiddleware)
+  @Delete("/:client_id")
+  @HttpCode(204)
+  @ResponseSchema(NotFoundModel, { statusCode: 404 })
+  async remove(
+    @Res() res: Response,
+    @Param("client_id") id: number
+  ): Promise<void> {
+    const db = this.db<CompleteClientSchema>(res.app);
+    await db.where("client_id", id).delete();
   }
 
   private offsetAndLimit(
