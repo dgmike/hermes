@@ -1,10 +1,8 @@
-import { Allow, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Application, NextFunction, Request, Response } from "express";
+import { Application, Response } from "express";
 import { Knex } from "knex";
 import {
   Body,
   Delete,
-  ExpressMiddlewareInterface,
   Get,
   HttpCode,
   JsonController,
@@ -17,74 +15,10 @@ import {
   UseBefore,
 } from "routing-controllers";
 import { ResponseSchema } from "routing-controllers-openapi";
-import { decorate, mix } from "ts-mixer";
-
-interface ClientIdentiableSchema {
-  client_id?: number | undefined;
-}
-
-class ClientIdentiableModel implements ClientIdentiableSchema {
-  @decorate(IsNumber())
-  client_id = undefined;
-}
-
-interface ClientSchema extends ClientIdentiableSchema {
-  name?: string | undefined;
-}
-
-class ClientBasicModel implements ClientSchema {
-  @decorate(Allow())
-  @decorate(IsString())
-  @decorate(IsNotEmpty())
-  name = undefined;
-
-  toJSON() {
-    return {
-      name: this.name,
-    };
-  }
-}
-
-interface TimestampsSchema {
-  created_at?: Date;
-  updated_at?: Date;
-}
-
-class TimestampableModel implements TimestampsSchema {
-  @decorate(IsDate())
-  created_at: Date | undefined;
-
-  @decorate(IsDate())
-  updated_at: Date | undefined;
-}
-
-interface CompleteClientSchema extends ClientSchema, TimestampsSchema {}
-
-@mix(ClientIdentiableModel, ClientBasicModel, TimestampableModel)
-class CompleteClientModel implements CompleteClientSchema {}
-
-class NotFoundModel {
-  @IsString()
-  message = "Resource not found";
-}
-
-class ClientExistsMiddleware implements ExpressMiddlewareInterface {
-  async use(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const db: Knex = req.app.locals["db"];
-    const countResult = await db<CompleteClientSchema>("clients")
-      .where("client_id", req.params["client_id"])
-      .count()
-      .first();
-
-    if (countResult && parseInt(`${countResult["count"]}`)) {
-      return next();
-    }
-
-    res.status(404).json({
-      message: "resource not found",
-    });
-  }
-}
+import { ClientExistsMiddleware } from "../middlewares/client.middlewares";
+import { ClientBasicModel, CompleteClientModel } from "../models/client.models";
+import { NotFoundModel } from "../models/shared.models";
+import { CompleteClientSchema } from "../schemas/clients.schemas";
 
 // @Authorized()
 @JsonController("/api/clients")
@@ -97,7 +31,6 @@ class ClientsController {
     @QueryParam("offset") userOffset = 0
   ): Promise<unknown[]> {
     const { limit, offset } = this.offsetAndLimit(userOffset, userLimit);
-
     return this.db<CompleteClientSchema>(res.app)
       .select("client_id", "name", "created_at", "updated_at")
       .limit(limit)
