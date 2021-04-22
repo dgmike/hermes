@@ -1,6 +1,7 @@
 import { Application, Response } from "express";
 import { Knex } from "knex";
 import {
+  Authorized,
   Body,
   Delete,
   Get,
@@ -12,7 +13,7 @@ import {
   Post,
   QueryParam,
   Res,
-  UseBefore,
+  UseBefore
 } from "routing-controllers";
 import { ResponseSchema } from "routing-controllers-openapi";
 import { ClientExistsMiddleware } from "../middlewares/client.middlewares";
@@ -20,7 +21,7 @@ import { ClientBasicModel, CompleteClientModel } from "../models/client.models";
 import { NotFoundModel } from "../models/shared.models";
 import { CompleteClientSchema } from "../schemas/clients.schemas";
 
-// @Authorized()
+@Authorized()
 @JsonController("/api/clients")
 class ClientsController {
   @Get()
@@ -109,3 +110,4 @@ class ClientsController {
 }
 
 export { ClientsController };
+
