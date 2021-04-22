@@ -1,3 +1,12 @@
+# [1.12.0](https://github.com/dgmike/hermes/compare/v1.11.0...v1.12.0) (2021-04-22)
+
+
+### Features
+
+* add swagger.yaml route, filter -able models ([9c0f45c](https://github.com/dgmike/hermes/commit/9c0f45c5f7cacf8a2d84d9e012b26ddeea0ce2ff))
+* create client added to API ([72d69cf](https://github.com/dgmike/hermes/commit/72d69cf4073d2d9949581ab00590e25ab544f4dc))
+* fetch one client added to API ([020b4a5](https://github.com/dgmike/hermes/commit/020b4a5d34aa24c2d3b9bdc2d5d1d6c666414298))
+
 # [1.11.0](https://github.com/dgmike/hermes/compare/v1.10.0...v1.11.0) (2021-04-21)
 
 
