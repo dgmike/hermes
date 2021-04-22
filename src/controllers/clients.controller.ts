@@ -13,7 +13,7 @@ import {
   Post,
   QueryParam,
   Res,
-  UseBefore
+  UseBefore,
 } from "routing-controllers";
 import { ResponseSchema } from "routing-controllers-openapi";
 import { ClientExistsMiddleware } from "../middlewares/client.middlewares";
@@ -110,4 +110,3 @@ class ClientsController {
 }
 
 export { ClientsController };
-
