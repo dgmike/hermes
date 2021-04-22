@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/dgmike/hermes/compare/v1.13.0...v1.14.0) (2021-04-22)
+
+
+### Features
+
+* routes for clients autorization added ([da18714](https://github.com/dgmike/hermes/commit/da187146854e815d16f6bde32df6116b922b3899))
+
 # [1.13.0](https://github.com/dgmike/hermes/compare/v1.12.0...v1.13.0) (2021-04-22)
 
 
