@@ -1,8 +1,9 @@
 import { Allow, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Application, Response } from "express";
+import { Application, NextFunction, Request, Response } from "express";
 import { Knex } from "knex";
 import {
   Body,
+  ExpressMiddlewareInterface,
   Get,
   HttpCode,
   JsonController,
@@ -12,6 +13,7 @@ import {
   Post,
   QueryParam,
   Res,
+  UseBefore,
 } from "routing-controllers";
 import { ResponseSchema } from "routing-controllers-openapi";
 import { decorate, mix } from "ts-mixer";
@@ -74,6 +76,25 @@ const resourceNotFound = (): { message: string } => {
   return response;
 };
 
+class ClientExistsMiddleware implements ExpressMiddlewareInterface {
+  async use(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const db: Knex = req.app.locals["db"];
+    const countResult = await db<CompleteClientSchema>("clients")
+      .where("client_id", req.params["client_id"])
+      .debug(true)
+      .count()
+      .first();
+
+    if (countResult && parseInt(`${countResult["count"]}`)) {
+      return next();
+    }
+
+    res.status(404).json({
+      message: "resource not found",
+    });
+  }
+}
+
 // @Authorized()
 @JsonController("/api/clients")
 class ClientsController {
@@ -109,36 +130,29 @@ class ClientsController {
     res.location(`/api/clients/${insertResult}`);
   }
 
-  @Get("/:id_client")
+  @UseBefore(ClientExistsMiddleware)
+  @Get("/:client_id")
   @ResponseSchema(CompleteClientModel)
   async fetchOne(
     @Res() res: Response,
-    @Param("id_client") id: number
+    @Param("client_id") id: number
   ): Promise<CompleteClientSchema> {
     const db = this.db<CompleteClientSchema>(res.app);
     const resource = await db.where("client_id", id).first();
     return resource;
   }
 
-  @Patch("/:id_client", { transformRequest: true })
+  @UseBefore(ClientExistsMiddleware)
+  @Patch("/:client_id", { transformRequest: true })
   @HttpCode(204)
   @ResponseSchema(NotFoundModel, { statusCode: 404 })
   @OnUndefined(resourceNotFound)
   async update(
     @Res() res: Response,
-    @Param("id_client") id: number,
+    @Param("client_id") id: number,
     @Body({ validate: true }) body: ClientBasicModel
   ): Promise<undefined | unknown> {
     const db = this.db<CompleteClientSchema>(res.app);
-    const { count: resourceCount }: { count: string } = await db
-      .where("client_id", id)
-      .count()
-      .first();
-
-    if (!parseInt(resourceCount)) {
-      return;
-    }
-
     await db.where("client_id", id).update(body.toJSON());
     return null;
   }
