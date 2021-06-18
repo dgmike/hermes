@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS integrations (
   name STRING NOT NULL,
   app_id STRING,
   secret_key STRING,
+  authorization_url STRING,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

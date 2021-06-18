@@ -59,6 +59,11 @@ router.get("/new", loginController.secureRoute, async (_req, res) => {
       },
       {
         type: "text",
+        name: "authorization_url",
+        label: "URL de autorização",
+      },
+      {
+        type: "text",
         name: "app_id",
         label: "Chave de APP",
       },
@@ -74,6 +79,7 @@ router.get("/new", loginController.secureRoute, async (_req, res) => {
 router.post("/", async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().trim().required().max(100),
+    authorization_url: Joi.string().trim().max(255),
     app_id: Joi.string().trim().max(255),
     secret_key: Joi.string().trim().max(255),
   });
@@ -158,6 +164,12 @@ router.get("/:integration_id/edit", async (req, res) => {
       },
       {
         type: "text",
+        name: "authorization_url",
+        label: "URL de autorização",
+        value: resource.authorization_url,
+      },
+      {
+        type: "text",
         name: "app_id",
         label: "Chave de APP",
         value: resource.app_id,
@@ -175,6 +187,7 @@ router.get("/:integration_id/edit", async (req, res) => {
 router.post("/:integration_id", async (req, res) => {
   const schema = Joi.object({
     name: Joi.string().trim().required().max(100),
+    authorization_url: Joi.string().trim().max(255),
     app_id: Joi.string().trim().max(255),
     secret_key: Joi.string().trim().max(255),
   });
@@ -199,6 +212,15 @@ router.post("/:integration_id", async (req, res) => {
           value: validation.value.name,
           errors: validation.error.details.filter((error) =>
             error.path.includes("name")
+          ),
+        },
+        {
+          type: "text",
+          name: "authorization_url",
+          label: "URL de autorização",
+          value: validation.value.authorization_url,
+          errors: validation.error.details.filter((error) =>
+            error.path.includes("authorization_url")
           ),
         },
         {
