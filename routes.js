@@ -24,6 +24,7 @@ router.get("/clients/new", clientsController.create);
 router.post("/clients", clientsController.store);
 router.get("/clients/:client_id/edit", clientsController.edit);
 router.post("/clients/:client_id", clientsController.update);
+router.post("/clients/:client_id/remove", clientsController.delete);
 
 router.use("/integrations", integrationController);
 

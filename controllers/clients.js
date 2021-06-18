@@ -21,6 +21,10 @@ exports.index = async (req, res) => {
         color: "green-100",
         text: "Cliente atualizado com sucesso!",
       },
+      removed: {
+        color: "green-100",
+        text: "Elemento removido com sucesso!",
+      },
     };
 
     const clients = await req.app.locals
@@ -38,6 +42,7 @@ exports.create = async (req, res) => {
 
   res.render("clients-form.html", {
     client: {},
+    clientIntegrations: [],
     integrations,
     emails: [],
     user: res.locals.user,
@@ -67,8 +72,12 @@ exports.store = async (req, res) => {
     });
 
     if (validationResult.error) {
+      const integrations = await req.app.locals.db("integrations");
+
       return res.render("clients-form.html", {
         client: validationResult.value,
+        integrations,
+        clientIntegrations: validationResult.value.integration_id || [],
         emails:
           (validationResult.value.email || []).map((email) => ({ email })) ||
           [],
@@ -264,4 +273,12 @@ exports.update = async (req, res) => {
   } catch (err) {
     catchError(res, err);
   }
+};
+
+exports.delete = async (req, res) => {
+  const { client_id } = req.params;
+  await req.app.locals.db("client_integrations").where({ client_id }).delete().debug();
+  await req.app.locals.db("client_emails").where({ client_id }).delete().debug();
+  await req.app.locals.db("clients").where({ client_id }).delete().debug();
+  res.redirect("/clients?action=removed");
 };

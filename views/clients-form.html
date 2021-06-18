@@ -95,7 +95,7 @@ endblock %} {% block page_title %}{{title_action}}{% endblock %} {% block head
                   value="{{integration.integration_id}}"
                   {% if clientIntegrations.includes(integration.integration_id) %}checked{% endif %}
                 />
-                <span class="mdl-checkbox__label">{{integration.integration_id}} {{integration.name}}</span>
+                <span class="mdl-checkbox__label">{{integration.name}}</span>
               </label>
             </td>
           </tr>
