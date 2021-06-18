@@ -15,11 +15,13 @@ const connection = () => {
 }
 
 const connect = async () => {
-  return knex({
+  const settings = {
     client,
     connection,
     useNullAsDefault: true,
-  });
+  };
+  console.log(settings)
+  return knex(settings);
 };
 
 module.exports = connect;
