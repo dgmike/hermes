@@ -16,6 +16,10 @@ router.get("/", async (req, res) => {
       color: "green-100",
       text: "Recurso atualizado com sucesso!",
     },
+    removed: {
+      color: "green-100",
+      text: "Recurso removido com sucesso!",
+    }
   };
 
   const message = actions[req.query.action];
@@ -225,6 +229,20 @@ router.post("/:integration_id", async (req, res) => {
     .update(validation.value);
 
   res.redirect("/integrations/?action=update-success");
+});
+
+router.post("/:integration_id/remove", async (req, res) => {
+  const { db } = req.app.locals;
+  const { integration_id } = req.params;
+  await db("client_integrations")
+    .where("integration_id", integration_id)
+    .delete()
+    .debug();
+  await db("integrations")
+    .where("integration_id", integration_id)
+    .delete()
+    .debug();
+  res.redirect("/integrations?action=removed");
 });
 
 module.exports = router;
