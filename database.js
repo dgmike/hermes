@@ -17,7 +17,7 @@ const connection = () => {
 const connect = async () => {
   const settings = {
     client,
-    connection,
+    connection: connection(),
     useNullAsDefault: true,
   };
   console.log(settings)
