@@ -23,7 +23,7 @@ exports.index = async (req, res) => {
       },
     };
 
-    const clients = await req.app.locals.db("clients");
+    const clients = await req.app.locals.db("clients").orderBy('created_at', 'desc');
     const message = actions[req.query.action];
     res.render("clients.html", { user: res.locals.user, clients, message });
   } catch (err) {

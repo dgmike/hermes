@@ -1,0 +1,66 @@
+{% extends '_dashboard.html' %}
+
+{% block title %}{{title}} | Hermes{% endblock %}
+{% block page_title %}{{title}}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .page-card {
+        min-height: auto;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<a class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+    style="position: fixed; bottom: 2rem; right: 2rem;" href="{{baseUrl}}/new">
+    <i class="material-icons">add</i>
+</a>
+
+{% if message %}
+<div class="mdl-grid mdl-layout mdl-shadow--2dp  mdl-color--{{message.color}}">
+  <div class="mdl-cell mdl-cell--12-col">
+    {{message.text}}
+  </div>
+</div>
+
+<div class="mdl-cell--1-col" style="height: 32px;"></div>
+{% endif %}
+
+{% if not resources.length %}
+<div class="page-card mdl-card mdl-shadow--2dp mdl-grid">
+    Nenhum item encontrado.
+</div>
+{% else %}
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%">
+    <thead>
+        {% for columnKey, columnValue in columns %}
+        <th class="">{{columnValue}}</th>
+        {% endfor %}
+        <th></th>
+    </thead>
+    <tbody>
+        {% for resource in resources %}
+        <tr>
+            {% for columnKey, columnValue in columns %}
+            <td>
+                {{resource[columnKey]}}
+            </td>
+            {% endfor %}
+            <td>
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--icon"
+                    href="{{baseUrl}}/{{resource[resourceIdColumn]}}/edit">
+                    <i class="material-icons">edit</i>
+                </a>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

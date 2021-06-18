@@ -1,63 +1,100 @@
 {% extends "_base.html" %}
 
+{% macro textField(field, extraClass = '') %}
+<div
+  class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label {{extraClass}} {% if field.errors.length %}is-invalid{% endif %}">
+  <input class="mdl-textfield__input" type="text" name="{{field.name}}" id="form-{{field.name}}"
+    value="{{field.value}}">
+  <label class="mdl-textfield__label" for="form-{{field.name}}">{{field.label}}</label>
+  {% for error in field.errors %}
+  <span class="mdl-textfield__error">{{error.message}}</span>
+  {% endfor %}
+</div>
+{% endmacro %}
+
 {% block head %}
 <style>
-html, body {
-  font-family: 'Roboto', 'Helvetica', sans-serif;
-}
+  html,
+  body {
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+  }
 
-.main-layout .drawer-header {
-	margin: 2rem 0;
-  text-align: center;
-}
+  .main-layout .drawer-header {
+    margin: 2rem 0;
+    text-align: center;
+  }
 
-/* Rules for sizing the icon. */
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
+  /* Rules for sizing the icon. */
+  .material-icons.md-18 {
+    font-size: 18px;
+  }
 
-/* Rules for using icons as black on a light background. */
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+  .material-icons.md-24 {
+    font-size: 24px;
+  }
 
-/* Rules for using icons as white on a dark background. */
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+  .material-icons.md-36 {
+    font-size: 36px;
+  }
 
-.mdl-layout__header .mdl-layout__drawer-button {
-  color: inherit;
-}
+  .material-icons.md-48 {
+    font-size: 48px;
+  }
 
-.main-layout .main-navigation .mdl-navigation__link {
-  display: -webkit-flex !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  color: rgba(255, 255, 255, 0.56);
-  font-weight: 500;
-}
-.main-layout .main-navigation .mdl-navigation__link:hover {
-  background-color: #00BCD4;
-  color: #37474F;
-}
-.main-layout .main-navigation .mdl-navigation__link:hover .material-icons {
-  color: #000 !important;
-}
-.main-navigation .mdl-navigation__link .material-icons {
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.56);
-  margin-right: 32px;
-}
+  /* Rules for using icons as black on a light background. */
+  .material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+  }
 
-.main-content {
-  max-width: 1080px;
-}
+  .material-icons.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+  }
+
+  /* Rules for using icons as white on a dark background. */
+  .material-icons.md-light {
+    color: rgba(255, 255, 255, 1);
+  }
+
+  .material-icons.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .mdl-layout__header .mdl-layout__drawer-button {
+    color: inherit;
+  }
+
+  .main-layout .main-navigation .mdl-navigation__link {
+    display: -webkit-flex !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.56);
+    font-weight: 500;
+  }
+
+  .main-layout .main-navigation .mdl-navigation__link:hover {
+    background-color: #00BCD4;
+    color: #37474F;
+  }
+
+  .main-layout .main-navigation .mdl-navigation__link:hover .material-icons {
+    color: #000 !important;
+  }
+
+  .main-navigation .mdl-navigation__link .material-icons {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.56);
+    margin-right: 32px;
+  }
+
+  .main-content {
+    max-width: 1080px;
+  }
 </style>
 {% endblock %}
 
@@ -65,46 +102,52 @@ html, body {
 
 <div class="main-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
 
-	<header class="mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
-		<div class="mdl-layout__header-row">
-			<span class="mdl-layout-title">{% block page_title %}{% endblock %}</span>
-			<div class="mdl-layout-spacer"></div>
+  <header class="mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">{% block page_title %}{% endblock %}</span>
+      <div class="mdl-layout-spacer"></div>
       <div class="mdl-list__item">{{ user.name }}</div>
-			<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-				<i class="material-icons">more_vert</i>
-			</button>
-			<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-				{% block top_right_menu_items %}
-          {#
-          <li><a href="/me" class="mdl-menu__item" title="Meus dados de usuário">Meus dados</a></li>
-          #}
-          <li><a href="/logout" class="mdl-menu__item" title="Sair do sistema">Sair</a></li>
-				{% endblock %}
-			</ul>
-		</div>
-	</header>
+      <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+        <i class="material-icons">more_vert</i>
+      </button>
+      <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+        {% block top_right_menu_items %}
+        {#
+        <li><a href="/me" class="mdl-menu__item" title="Meus dados de usuário">Meus dados</a></li>
+        #}
+        <li><a href="/logout" class="mdl-menu__item" title="Sair do sistema">Sair</a></li>
+        {% endblock %}
+      </ul>
+    </div>
+  </header>
 
-	<div class="mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
-		<header class="drawer-header">
-			<i class="material-icons md-48">store</i>
-			<div>Hermes</div>
-		</header>
+  <div class="mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+    <header class="drawer-header">
+      <i class="material-icons md-48">store</i>
+      <div>Hermes</div>
+    </header>
 
-		<nav class="main-navigation mdl-navigation">
-			<a class="mdl-navigation__link" href="/dashboard"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Página inicial</a>
-			<a class="mdl-navigation__link" href="/clients"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">person</i>Clientes</a>
-			<a class="mdl-navigation__link" href="/integrations"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">electrical_services</i>Integrações</a>
+    <nav class="main-navigation mdl-navigation">
+      <a class="mdl-navigation__link" href="/dashboard"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">home</i>Página inicial</a>
+      <a class="mdl-navigation__link" href="/clients"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">person</i>Clientes</a>
+      <a class="mdl-navigation__link" href="/integrations"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">electrical_services</i>Integrações</a>
       {#
-			<a class="mdl-navigation__link" href="/configurations"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">settings</i>Configurações</a>
-			<a class="mdl-navigation__link" href="/users"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Usuários do painel</a>
+      <a class="mdl-navigation__link" href="/configurations"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">settings</i>Configurações</a>
+      <a class="mdl-navigation__link" href="/users"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">people</i>Usuários do painel</a>
       #}
-			<a class="mdl-navigation__link" href="/logout"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">logout</i>Sair</a>
-		</nav>
+      <a class="mdl-navigation__link" href="/logout"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">logout</i>Sair</a>
+    </nav>
   </div>
 
-	<main class="mdl-layout__content mdl-color--grey-100">
-		<div class="mdl-grid main-content">
-			{% block content %}{% endblock %}
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-grid main-content">
+      {% block content %}{% endblock %}
     </div>
   </main>
 

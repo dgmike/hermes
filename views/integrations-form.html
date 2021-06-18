@@ -1,0 +1,39 @@
+{% extends '_dashboard.html' %}
+
+{% block title %}{{title}} | Hermes{% endblock %}
+{% block page_title %}{{title}}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .page-card {
+        min-height: auto;
+        width: 100%;
+        padding: 13px;
+    }
+
+    .form {
+        margin-left: 0;
+        margin-right: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="mdl-cell mdl-cell--12-col">
+    <div class="mdl-card page-card">
+        <form action="{{formAction}}" method="post" class="form mdl-grid">
+
+            {% for field in fields %}{{ textField(field, 'mdl-cell mdl-cell--12-col') }}{% endfor %}
+
+            <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit">
+                    Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
