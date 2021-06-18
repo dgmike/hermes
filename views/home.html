@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+
+{% block head %}
+<style>
+  .login-content {
+    padding-top: 5rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .login-content .title {
+    font-size: 1.8rem;
+  }
+
+  .login-content .form {
+    margin-bottom: 1.5rem;
+  }
+
+  .mdl-textfield {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="mdl-grid login-content">
+  <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-card mdl-shadow--2dp">
+      <h1 class="title">Login</h1>
+      {% if message %}<div class="message">{{message}}</div>{% endif %}
+      <form action="/login" method="post" class="form">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="form-login-username" name="username" />
+          <label class="mdl-textfield__label" for="form-login-username">Usuário</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="password" id="form-login-password" name="password" />
+          <label class="mdl-textfield__label" for="form-login-password">Senha</label>
+        </div>
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+          Fazer o login
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

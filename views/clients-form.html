@@ -1,0 +1,38 @@
+{% extends '_dashboard.html' %}
+
+{% block title %}{{title_action}} | Hermes{% endblock %}
+{% block page_title %}{{title_action}}{% endblock %}
+
+{% block content %}
+
+<div class="mdl-grid">
+  <div class="mdl-cell--12-col mdl-card mdl-shadow--2dp mdl-color-white">
+    {% if errors %}
+    <div class="mdl-grid  mdl-color--yellow-100">
+      <div class="mdl-cell mdl-cell--12-col">
+        <p>Erro ao realizar inserção. Corrija os error para continuar.</p>
+        <ul>
+          {% for error in errors %}
+          <li>{{ error.message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+    <form action="/clients{% if client.client_id %}/{{client.client_id}}{% endif %}" method="post" class="form mdl-grid">
+      <div
+        class="mdl-cell--12-col-phone mdl-cell--8-col-desktop mdl-cell--6-col-tablet mdl-cell--2-offset-desktop mdl-cell--1-offset-tablet mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" name="name" value="{{client.name}}" id="form-clients-name" />
+        <label class="mdl-textfield__label" for="form-login-name">Nome completo</label>
+      </div>
+
+      <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit">
+          {{form_action}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

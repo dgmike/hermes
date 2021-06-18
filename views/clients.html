@@ -1,0 +1,52 @@
+{% extends '_dashboard.html' %}
+
+{% block title %}Clientes | Hermes{% endblock %}
+
+{% block page_title %}Clientes{% endblock %}
+
+{% block content %}
+
+<a class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+  style="position: fixed; bottom: 2rem; right: 2rem;" href="/clients/new">
+  <i class="material-icons">add</i>
+</a>
+
+{% if message %}
+<div class="mdl-grid mdl-layout mdl-shadow--2dp  mdl-color--{{message.color}}">
+  <div class="mdl-cell mdl-cell--12-col">
+    {{message.text}}
+  </div>
+</div>
+
+<div class="mdl-cell--1-col" style="height: 32px;"></div>
+{% endif %}
+
+<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" style="width: 100%">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">ID</th>
+      <th class="mdl-data-table__cell--non-numeric">Nome</th>
+      <th>Data de criação</th>
+      <th>Data da última atualização</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for client in clients %}
+    <tr>
+      <td style="width: 3rem">{{ client.client_id }}</td>
+      <td class="mdl-data-table__cell--non-numeric">{{ client.name }}</td>
+      <td>{{ client.created_at }}</td>
+      <td>{{ client.updated_at }}</td>
+      <td>
+        <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--icon"
+          href="/clients/{{client.client_id}}/edit">
+          <i class="material-icons">edit</i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
