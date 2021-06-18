@@ -1,33 +1,113 @@
-{% extends '_dashboard.html' %}
+{% extends '_dashboard.html' %} {% block title %}{{title_action}} | Hermes{%
+endblock %} {% block page_title %}{{title_action}}{% endblock %} {% block head
+%} {{ super() }}
+<style>
+  .page-card {
+    min-height: auto;
+    width: 100%;
+    padding: 13px;
+  }
 
-{% block title %}{{title_action}} | Hermes{% endblock %}
-{% block page_title %}{{title_action}}{% endblock %}
+  .form {
+    margin-left: 0;
+    margin-right: 0;
+  }
 
-{% block content %}
+  .field-email {
+    width: 100%;
+  }
+</style>
+{% endblock %} {% block content %} {% if errors %}
+<div
+  class="mdl-cell mdl-cell--12-col mdl-color--yellow-100"
+  style="padding: 1rem"
+>
+  <p>Erro ao realizar inserção. Corrija os error para continuar.</p>
+  <ul>
+    {% for error in errors %}
+    <li>{{ error.message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 
-<div class="mdl-grid">
-  <div class="mdl-cell--12-col mdl-card mdl-shadow--2dp mdl-color-white">
-    {% if errors %}
-    <div class="mdl-grid  mdl-color--yellow-100">
-      <div class="mdl-cell mdl-cell--12-col">
-        <p>Erro ao realizar inserção. Corrija os error para continuar.</p>
-        <ul>
-          {% for error in errors %}
-          <li>{{ error.message }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-    {% endif %}
-    <form action="/clients{% if client.client_id %}/{{client.client_id}}{% endif %}" method="post" class="form mdl-grid">
+<div class="mdl-cell mdl-cell--12-col">
+  <div class="mdl-card page-card">
+    <form
+      action="/clients{% if client.client_id %}/{{client.client_id}}{% endif %}"
+      method="post"
+      class="form mdl-grid"
+    >
       <div
-        class="mdl-cell--12-col-phone mdl-cell--8-col-desktop mdl-cell--6-col-tablet mdl-cell--2-offset-desktop mdl-cell--1-offset-tablet mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <input class="mdl-textfield__input" type="text" name="name" value="{{client.name}}" id="form-clients-name" />
-        <label class="mdl-textfield__label" for="form-login-clients-name">Nome completo</label>
+        class="mdl-cell mdl-cell--12-col-phone mdl-cell--8-col-desktop mdl-cell--6-col-tablet mdl-cell--2-offset-desktop mdl-cell--1-offset-tablet mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+      >
+        <input
+          class="mdl-textfield__input"
+          type="text"
+          name="name"
+          value="{{client.name}}"
+          id="form-clients-name"
+        />
+        <label class="mdl-textfield__label" for="form-login-clients-name"
+          >Nome completo</label
+        >
       </div>
+
+      <table class="mdl-data-table mdl-js-data-table mdl-cell mdl-cell--12-col">
+        <thead>
+          <tr>
+            <th class="mdl-data-table__cell--non-numeric">E-mails</th>
+            <th style="width: 5rem">
+              <button
+                type="button"
+                class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                id="add-email-row"
+              >
+                <i class="material-icons">add</i>
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="emails-table-body"></tbody>
+      </table>
+
+      <table class="mdl-data-table mdl-js-data-table mdl-cell mdl-cell--12-col">
+        <thead>
+          <tr>
+            <th class="mdl-data-table__cell--non-numeric">
+              Integrações habilitadas
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for integration in integrations %}
+          <tr>
+            <td class="mdl-data-table__cell--non-numeric">
+              <label
+                class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
+                for="form-checkbox-integration_id-{{integration.integration_id}}"
+              >
+                <input
+                  type="checkbox"
+                  id="form-checkbox-integration_id-{{integration.integration_id}}"
+                  class="mdl-checkbox__input"
+                  name="integration_id[]"
+                  value="{{integration.integration_id}}"
+                  {% if clientIntegrations.includes(integration.integration_id) %}checked{% endif %}
+                />
+                <span class="mdl-checkbox__label">{{integration.integration_id}} {{integration.name}}</span>
+              </label>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
 
       <div class="mdl-cell mdl-cell--12-col mdl-typography--text-center">
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit">
+        <button
+          class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+          type="submit"
+        >
           {{form_action}}
         </button>
       </div>
@@ -35,4 +115,50 @@
   </div>
 </div>
 
+{% endblock %} {% block footer %}
+<script id="emails-table-body-template" type="plain/text">
+  <tr>
+    <td class="mdl-data-table__cell--non-numeric">
+      {{ textField({type: 'email', name: 'email[]', label: 'e-mail',
+      value: ''}, 'field-email') }}
+    </td>
+    <td>
+      <button
+        type="button"
+        class="mdl-button mdl-js-button mdl-js-ripple-effect button-remove-line"
+      >
+        <i class="material-icons">remove</i>
+      </button>
+    </td>
+  </tr>
+</script>
+
+<script>
+  const addEmailRow = (value) => {
+    const template = document.querySelector("#emails-table-body-template");
+    const clonedNode = document.createElement("tr");
+    clonedNode.innerHTML = template.innerHTML;
+    clonedNode
+      .querySelector(".button-remove-line")
+      .addEventListener("click", (event) => {
+        event.preventDefault();
+        event.target.closest("tr").remove();
+      });
+    clonedNode.querySelector("input[type=email]").value = value || '';
+    componentHandler.upgradeElement(clonedNode.querySelector(".mdl-button"));
+    componentHandler.upgradeElement(clonedNode.querySelector(".mdl-textfield"));
+    document.querySelector("#emails-table-body").appendChild(clonedNode);
+  };
+
+  document
+    .querySelector("#add-email-row")
+    .addEventListener("click", (event) => {
+      event.preventDefault();
+      addEmailRow();
+    });
+
+  ({{ emails | dump | safe }} || []).forEach((clientEmail) => {
+    addEmailRow(clientEmail.email);
+  });
+</script>
 {% endblock %}

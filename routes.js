@@ -31,12 +31,12 @@ router.use(
   "/users",
   createCrud({
     resourceTable: "users",
+    resourceIdColumn: "user_id",
     resourceName: {
       singular: "usuário",
       plural: "usuários",
     },
     baseUrl: "/users",
-    resourceIdColumn: "user_id",
     listColumns: {
       name: "Nome",
       username: "Usuário",
