@@ -232,8 +232,7 @@ exports.update = async (req, res) => {
                 "client_email_id",
                 mustDeleteEmails.map(({ client_email_id }) => client_email_id)
               )
-              .delete()
-              .debug(true),
+              .delete(),
           ]),
       ...mustInsertEmails.map((emailRow) =>
         req.app.locals
@@ -251,17 +250,13 @@ exports.update = async (req, res) => {
                   ({ client_integration_id }) => client_integration_id
                 )
               )
-              .delete()
-              .debug(true),
+              .delete(),
           ]),
       ...mustInsertIntegrations.map((integration) =>
-        req.app.locals
-          .db("client_integrations")
-          .insert({
-            client_id: req.params.client_id,
-            integration_id: integration,
-          })
-          .debug()
+        req.app.locals.db("client_integrations").insert({
+          client_id: req.params.client_id,
+          integration_id: integration,
+        })
       ),
     ]);
 

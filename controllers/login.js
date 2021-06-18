@@ -16,6 +16,14 @@ exports.secureRoute = (req, res, next) => {
       return logout(res);
     }
     res.locals.user = payload;
+    const data = {
+      name: payload.name,
+      username: payload.username,
+    };
+    const token = jwt.sign(data, JWT_SECRET, { expiresIn: "30m" });
+      res.cookie("access_token", `Bearer ${token}`, {
+      expires: new Date(Date.now() + 0.5 * 3600000),
+    });
     next();
   });
 };
