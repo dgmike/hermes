@@ -3,7 +3,7 @@
 {% macro textField(field, extraClass = '') %}
 <div
   class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label {{extraClass}} {% if field.errors.length %}is-invalid{% endif %}">
-  <input class="mdl-textfield__input" type="text" name="{{field.name}}" id="form-{{field.name}}"
+  <input class="mdl-textfield__input" type="{{field.type}}" name="{{field.name}}" id="form-{{field.name}}"
     value="{{field.value}}">
   <label class="mdl-textfield__label" for="form-{{field.name}}">{{field.label}}</label>
   {% for error in field.errors %}
@@ -131,15 +131,15 @@
       <a class="mdl-navigation__link" href="/dashboard"><i class="mdl-color-text--blue-grey-400 material-icons"
           role="presentation">home</i>Página inicial</a>
       <a class="mdl-navigation__link" href="/clients"><i class="mdl-color-text--blue-grey-400 material-icons"
-          role="presentation">person</i>Clientes</a>
+          role="presentation">people</i>Clientes</a>
       <a class="mdl-navigation__link" href="/integrations"><i class="mdl-color-text--blue-grey-400 material-icons"
           role="presentation">electrical_services</i>Integrações</a>
       {#
       <a class="mdl-navigation__link" href="/configurations"><i class="mdl-color-text--blue-grey-400 material-icons"
           role="presentation">settings</i>Configurações</a>
-      <a class="mdl-navigation__link" href="/users"><i class="mdl-color-text--blue-grey-400 material-icons"
-          role="presentation">people</i>Usuários do painel</a>
       #}
+      <a class="mdl-navigation__link" href="/users"><i class="mdl-color-text--blue-grey-400 material-icons"
+          role="presentation">manage_accounts</i>Usuários</a>
       <a class="mdl-navigation__link" href="/logout"><i class="mdl-color-text--blue-grey-400 material-icons"
           role="presentation">logout</i>Sair</a>
     </nav>
