@@ -12,6 +12,10 @@ const createCrud = (options) => {
         color: "green-100",
         text: "Recurso atualizado com sucesso!",
       },
+      "delete-success": {
+        color: "green-100",
+        text: "Recurso removido com sucesso!",
+      },
     };
 
     const message = actions[req.query.action];
@@ -110,7 +114,9 @@ const createCrud = (options) => {
         title: `Editar ${options.resourceName.singular} # ${
           resource[options.resourceIdColumn]
         }`,
-        formAction: `${options.baseUrl}/${req.params[options.resourceIdColumn]}`,
+        formAction: `${options.baseUrl}/${
+          req.params[options.resourceIdColumn]
+        }`,
         fields: options.formFields.map((item) => ({
           ...item,
           value: item.hiddenValue ? "" : validation.value[item.name],
@@ -127,6 +133,13 @@ const createCrud = (options) => {
       .update(validation.value);
 
     res.redirect(`${options.baseUrl}/?action=update-success`);
+  };
+
+  const remove = async (req, res) => {
+    if (options.removeAction) {
+      await options.removeAction(req.params[options.resourceIdColumn], req.app.locals.db, res.app.locals.resource);
+    }
+    res.redirect(`${options.baseUrl}/?action=delete-success`);
   };
 
   const resourceParamFetcher = async (req, res, next, param) => {
@@ -155,6 +168,7 @@ const createCrud = (options) => {
   router.get("/new", create);
   router.get(`/:${options.resourceIdColumn}/edit`, edit);
   router.post(`/:${options.resourceIdColumn}`, update);
+  router.post(`/:${options.resourceIdColumn}/delete`, remove);
 
   return router;
 };

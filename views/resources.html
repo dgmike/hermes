@@ -10,6 +10,10 @@
         min-height: auto;
         width: 100%;
     }
+
+    .hide {
+        visibility: hidden;
+    }
 </style>
 {% endblock %}
 
@@ -22,9 +26,9 @@
 
 {% if message %}
 <div class="mdl-grid mdl-layout mdl-shadow--2dp  mdl-color--{{message.color}}">
-  <div class="mdl-cell mdl-cell--12-col">
-    {{message.text}}
-  </div>
+    <div class="mdl-cell mdl-cell--12-col">
+        {{message.text}}
+    </div>
 </div>
 
 <div class="mdl-cell--1-col" style="height: 32px;"></div>
@@ -51,16 +55,64 @@
             </td>
             {% endfor %}
             <td>
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--icon"
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--icon hide"
                     href="{{baseUrl}}/{{resource[resourceIdColumn]}}/edit">
                     <i class="material-icons">edit</i>
                 </a>
-
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--icon mdl-color-text--red hide remove-action"
+                    href="{{baseUrl}}/{{resource[resourceIdColumn]}}/delete">
+                    <i class="material-icons">delete</i>
+                </a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% endif %}
+
+{% endblock %}
+
+{% block footer %}
+
+<dialog class="mdl-dialog dialog-remove-action" style="width: 50rem;">
+    <h4 class="mdl-dialog__title" style="font-size: 1.4rem;">Deseja remover esse elemento?</h4>
+    <div class="mdl-dialog__content">
+        <p>
+            Ao realizar esta ação o elemento será removido. Esta ação não poderá ser desfeita.
+        </p>
+    </div>
+    <div class="mdl-dialog__actions">
+        <form action="#" method="POST" id="remove-form">
+            <button type="submit" class="mdl-button mdl-button--colored mdl-color--red mdl-color-text--white">Remover
+                registro</button>
+        </form>
+        <button type="button" class="mdl-button close">Voltar a lista</button>
+    </div>
+</dialog>
+
+<script>
+    document.querySelectorAll('.mdl-data-table tbody tr').forEach((row) => {
+        row.addEventListener('mouseover', (event) => {
+            const elms = event.target.closest('tr').querySelectorAll('.mdl-button--icon');
+            elms.forEach((elm) => elm.style.visibility = 'visible');
+        });
+        row.addEventListener('mouseout', (event) => {
+            const elms = event.target.closest('tr').querySelectorAll('.mdl-button--icon');
+            elms.forEach((elm) => elm.style.visibility = 'hidden');
+        });
+    });
+    document.querySelectorAll('.remove-action').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            document.querySelector('#remove-form').action = event.target.closest('a').href;
+
+            const dialog = document.querySelector('.dialog-remove-action')
+            dialog.showModal()
+            dialog.querySelector('.close').addEventListener('click', function () {
+                dialog.close();
+            });
+        })
+    })
+</script>
 
 {% endblock %}

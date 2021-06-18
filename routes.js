@@ -70,6 +70,9 @@ router.use(
         .max(100)
         .custom((value) => passwordCrypt(value)),
     }),
+    async removeAction(user_id, db) {
+      await db("users").where({ user_id }).delete();
+    },
   })
 );
 
