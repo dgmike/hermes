@@ -32,43 +32,40 @@ router.get("/", async (req, res) => {
     baseUrl: "/integrations",
     resourceIdColumn: "integration_id",
     columns: {
-      integration_id: "ID",
-      name: "Nome",
-      created_at: "Criado em",
-      updated_at: "Atualizado em",
+      integration_id: ["ID"],
+      name: ["Nome", "mdl-data-table__cell--non-numeric"],
+      app_id: ["App ID", "mdl-data-table__cell--non-numeric"],
+      created_at: ["Criado em"],
+      updated_at: ["Atualizado em"],
     },
   });
 });
 
-router.get(
-  "/new",
-  loginController.secureRoute,
-  async (_req, res) => {
-    res.render("integrations-form.html", {
-      user: res.locals.user,
-      title: "Criar recurso de integrações",
-      baseUrl: "/integrations",
-      formAction: "/integrations",
-      fields: [
-        {
-          type: "text",
-          name: "name",
-          label: "Nome",
-        },
-        {
-          type: "text",
-          name: "app_id",
-          label: "Chave de APP",
-        },
-        {
-          type: "text",
-          name: "secret_key",
-          label: "Chave segura de API",
-        },
-      ],
-    });
-  }
-);
+router.get("/new", loginController.secureRoute, async (_req, res) => {
+  res.render("integrations-form.html", {
+    user: res.locals.user,
+    title: "Criar recurso de integrações",
+    baseUrl: "/integrations",
+    formAction: "/integrations",
+    fields: [
+      {
+        type: "text",
+        name: "name",
+        label: "Nome",
+      },
+      {
+        type: "text",
+        name: "app_id",
+        label: "Chave de APP",
+      },
+      {
+        type: "text",
+        name: "secret_key",
+        label: "Chave segura de API",
+      },
+    ],
+  });
+});
 
 router.post("/", async (req, res) => {
   const schema = Joi.object({
