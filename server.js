@@ -1,5 +1,7 @@
+const environment = require('./environment');
 const createApp = require('./app');
 
+environment.load();
 const port = parseInt(process.env.PORT || '3000');
 
 createApp()
