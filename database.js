@@ -11,6 +11,13 @@ const connection = () => {
     return { filename: url };
   }
 
+  if (client === 'postgres') {
+    return {
+      connectionString: url,
+      ssl: { rejectUnauthorized: false },
+    };
+  }
+
   return url;
 }
 
@@ -20,7 +27,6 @@ const connect = async () => {
     connection: connection(),
     useNullAsDefault: true,
   };
-  console.log(settings)
   return knex(settings);
 };
 
