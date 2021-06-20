@@ -79,7 +79,7 @@ router.use(
 router.get("/oauth", async (req, res) => {
   const { db } = req.app.locals;
   const integration = await db("integrations")
-    .where({ integration_id: req.query.client_id })
+    .where({ integration_id: `${req.query.client_id}` })
     .first();
 
   const redirect = new URL(integration.authorization_url);
