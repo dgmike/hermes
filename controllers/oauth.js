@@ -58,10 +58,22 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
       },
     });
 
-    // fazer request para /me
-    // validar e-mail nos e-mails habilitados para essa integration
+    console.log('userData', userData.data.email);
 
-    console.log('userData', userData.data);
+    const [{ count: results }] = await db('client_integrations')
+      .count()
+      .join('client_emails', 'client_integrations.client_id', 'client_emails.client_id')
+      .where({
+        'client_integrations.integration_id': session.integration_id,
+        'client_emails.email': userData.data.email,
+      });
+
+    console.log('results', typeof parseInt(results), parseInt(results))
+
+    if (parseInt(results) <= 0) {
+      res.json({ ok: false });
+      return;
+    }
 
     await db('sessions')
       .where({ session_id: session.session_id })
@@ -83,7 +95,7 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
   });
 };
 
-exports.token = async ({ res, query, body, params }) => {
+exports.token = async ({ res, query, body, params, app: { locals: { db } } }) => {
   console.log('body', body);
   console.log('query', query);
   console.log('params', params);
