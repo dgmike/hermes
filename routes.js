@@ -79,5 +79,6 @@ router.use(
 
 router.get("/oauth", oauthController.oauth);
 router.get("/oauth2", oauthController.oauth2);
+router.post("/token", oauthController.token);
 
 module.exports = router;

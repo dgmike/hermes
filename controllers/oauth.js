@@ -23,7 +23,6 @@ exports.oauth = async (req, res) => {
     "redirect_uri",
     "https://hermes-store.herokuapp.com/oauth2",
   );
-  // redirect.searchParams.append('state', req.query.state);
   redirect.searchParams.append("state", token);
 
   res.json({
@@ -50,12 +49,24 @@ exports.oauth = async (req, res) => {
 exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
   const session = await db("sessions")
     .where({ token: query.state })
-    .debug()
     .first();
+
+  const redirect_uri = new URL(session.redirect_uri);
+  redirect_uri.searchParams.append('code', query.code);
+  redirect_uri.searchParams.append('state', session.state);
 
   res.json({
     params,
     query,
     session,
+    redirect_uri,
   });
+};
+
+exports.token = async ({ res, query, body, params }) => {
+  console.log('body', body);
+  console.log('query', query);
+  console.log('params', params);
+
+  res.json({ ok: 200 });
 };
