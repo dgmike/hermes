@@ -81,7 +81,7 @@ exports.token = async ({ res, query, body, params }) => {
 
   try {
     const tokenResponse = await axios.post(tokenURL, tokenData.toString());
-    res.json({ ok: 200, response: tokenResponse.json() });
+    res.json({ ok: 200, response: tokenResponse.data });
   } catch (err) {
     console.error("ERRO", err);
     res.json({ ok: false });
