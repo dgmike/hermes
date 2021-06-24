@@ -8,7 +8,7 @@ exports.oauth = async (req, res) => {
 
   const token = Buffer.from(bcrypt.hashSync(bcrypt.genSaltSync(), 10)).toString('base64');
 
-  await db("session")
+  await db("sessions")
     .insert({
       token,
       integration_id: integration.integration_id,
