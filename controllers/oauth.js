@@ -81,7 +81,7 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
         integration_token: tokenResponse.data,
       });
 
-    res.redirect(redirect_url);
+    res.redirect(redirect_uri);
   } catch (err) {
     console.error("ERRO", err);
     res.json({ ok: false });
