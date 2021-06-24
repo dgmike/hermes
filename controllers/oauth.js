@@ -1,21 +1,30 @@
+const bcrypt = require("bcrypt");
+
 exports.oauth = async (req, res) => {
   const { db } = req.app.locals;
   const integration = await db("integrations")
     .where({ integration_id: `${req.query.client_id}` })
     .first();
 
+  const token = Buffer.from(bcrypt.hashSync(bcrypt.genSaltSync(), 10)).toString('base64');
+
+  await db("session")
+    .insert({
+      token,
+      integration_id: integration.integration_id,
+      state: req.query.state,
+      redirect_uri: req.query.redirect_uri,
+    });
+
   const redirect = new URL(integration.authorization_url);
   redirect.searchParams.append("client_id", integration.app_id);
   redirect.searchParams.append("response_type", "code");
   redirect.searchParams.append(
     "redirect_uri",
-    // "https://script.google.com/macros/d/1uaDCN3bQKVJLCJAGUOmE6bof_jv8E0i_wQhrI9p0zGgH9sXSQDXOKeqy/usercallback"
-    // "http://localhost:3000/oauth_callback",
-    // req.query.redirect_uri,
-    'https://hermes-store.herokuapp.com/oauth2'
+    "https://hermes-store.herokuapp.com/oauth2",
   );
   // redirect.searchParams.append('state', req.query.state);
-  redirect.searchParams.append("state", "some-random-value-from-database");
+  redirect.searchParams.append("state", token);
 
   res.json({
     params: req.params,
