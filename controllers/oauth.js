@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const axios = require("axios");
 
 exports.oauth = async (req, res) => {
   const { db } = req.app.locals;
@@ -68,5 +69,17 @@ exports.token = async ({ res, query, body, params }) => {
   console.log('query', query);
   console.log('params', params);
 
-  res.json({ ok: 200 });
+  const tokenURL = "https://api.mercadolibre.com/oauth/token";
+
+  const tokenData = new URLSearchParams({
+    grant_type: "authorization_code",
+    client_id: "8587496222794491",
+    client_secret: "zieemA963GuqC18LPsCp6xjEqpnMDCbd",
+    code: "TG-60d41c347332090007487b26-207322133",
+    redirect_uri: "https://hermes-store.herokuapp.com/oauth2",
+  });
+
+  const tokenResponse = await axios.post(tokenURL, tokenData.toString());
+
+  res.json({ ok: 200, response: tokenResponse.json() });
 };
