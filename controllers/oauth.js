@@ -49,7 +49,7 @@ exports.oauth = async (req, res) => {
 
 exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
   const session = await db("sessions")
-    .where({ state: query.state })
+    .where({ token: query.state })
     .debug()
     .first();
 
