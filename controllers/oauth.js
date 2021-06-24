@@ -48,8 +48,9 @@ exports.oauth = async (req, res) => {
 };
 
 exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
-  const session = db("sessions")
-    .where({ state: query.state });
+  const session = await db("sessions")
+    .where({ state: query.state })
+    .first();
 
   res.json({
     params,
