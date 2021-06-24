@@ -119,6 +119,7 @@ router.get("/oauth", async (req, res) => {
 router.get("/oauth2", async (req, res) => {
   res.json({
     params: req.params,
+    query: req.query,
   });
 });
 
