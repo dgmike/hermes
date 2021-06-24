@@ -1,11 +1,11 @@
 exports.oauth = async (req, res) => {
   const { db } = req.app.locals;
   const integration = await db("integrations")
-    .where({ client_id: `${req.query.client_id}` })
+    .where({ integration_id: `${req.query.client_id}` })
     .first();
 
   const redirect = new URL(integration.authorization_url);
-  redirect.searchParams.append("integration_id", integration.app_id);
+  redirect.searchParams.append("client_id", integration.app_id);
   redirect.searchParams.append("response_type", "code");
   redirect.searchParams.append(
     "redirect_uri",
