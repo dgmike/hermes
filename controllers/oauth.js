@@ -79,7 +79,11 @@ exports.token = async ({ res, query, body, params }) => {
     redirect_uri: "https://hermes-store.herokuapp.com/oauth2",
   });
 
-  const tokenResponse = await axios.post(tokenURL, tokenData.toString());
-
-  res.json({ ok: 200, response: tokenResponse.json() });
+  try {
+    const tokenResponse = await axios.post(tokenURL, tokenData.toString());
+    res.json({ ok: 200, response: tokenResponse.json() });
+  } catch (err) {
+    console.error("ERRO", err);
+    res.json({ ok: false });
+  }
 };
