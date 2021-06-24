@@ -67,7 +67,7 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
     grant_type: "authorization_code",
     client_id: "8587496222794491",
     client_secret: "zieemA963GuqC18LPsCp6xjEqpnMDCbd",
-    code: body.code,
+    code: query.code,
     redirect_uri: "https://hermes-store.herokuapp.com/oauth2",
   });
 
