@@ -47,9 +47,13 @@ exports.oauth = async (req, res) => {
   });
 };
 
-exports.oauth2 = async (req, res) => {
+exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
+  const session = db("sessions")
+    .where({ state: query.state });
+
   res.json({
-    params: req.params,
-    query: req.query,
+    params,
+    query,
+    session,
   });
 };
