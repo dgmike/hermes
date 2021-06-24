@@ -26,6 +26,9 @@ exports.oauth = async (req, res) => {
   );
   redirect.searchParams.append("state", token);
 
+  res.redirect(redirect);
+
+  /*
   res.json({
     params: req.params,
     query: req.query,
@@ -45,6 +48,7 @@ exports.oauth = async (req, res) => {
       username: redirect.username,
     },
   });
+  */
 };
 
 exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
