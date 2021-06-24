@@ -26,6 +26,7 @@ const connect = async () => {
     client,
     connection: connection(),
     useNullAsDefault: true,
+    debug: ['true', 'TRUE', 'yes', 'YES', 'on', 'ON', '1'].includes(process.env.DATABASE_DEBUG || 'FALSE'),
   };
   return knex(settings);
 };
