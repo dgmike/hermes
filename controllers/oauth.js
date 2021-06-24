@@ -36,11 +36,11 @@ exports.oauth = async (req, res) => {
       username: redirect.username,
     },
   });
-});
+};
 
 exports.oauth2 = async (req, res) => {
   res.json({
     params: req.params,
     query: req.query,
   });
-});
+};
