@@ -60,19 +60,7 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
   redirect_uri.searchParams.append('code', query.code);
   redirect_uri.searchParams.append('state', session.state);
 
-  res.json({
-    params,
-    query,
-    session,
-    redirect_uri,
-  });
-};
-
-exports.token = async ({ res, query, body, params }) => {
-  console.log('body', body);
-  console.log('query', query);
-  console.log('params', params);
-
+  // check token
   const tokenURL = "https://api.mercadolibre.com/oauth/token";
 
   const tokenData = new URLSearchParams({
@@ -86,9 +74,28 @@ exports.token = async ({ res, query, body, params }) => {
   try {
     const tokenResponse = await axios.post(tokenURL, tokenData.toString());
     console.log('response', tokenResponse.data);
-    res.json({ ok: 200, response: tokenResponse.data });
+
+    // fazer request para /me
+    // validar e-mail nos e-mails habilitados para essa integration
+
+    // res.json({ ok: 200, response: tokenResponse.data });
   } catch (err) {
     console.error("ERRO", err);
-    res.json({ ok: false });
+    // res.json({ ok: false });
   }
+
+  res.json({
+    params,
+    query,
+    session,
+    redirect_uri,
+  });
+};
+
+exports.token = async ({ res, query, body, params }) => {
+  console.log('body', body);
+  console.log('query', query);
+  console.log('params', params);
+
+  res.json({ ok: 200 });
 };
