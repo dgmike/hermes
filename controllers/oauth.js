@@ -27,28 +27,6 @@ exports.oauth = async (req, res) => {
   redirect.searchParams.append("state", token);
 
   res.redirect(redirect);
-
-  /*
-  res.json({
-    params: req.params,
-    query: req.query,
-    integration,
-    redirect: {
-      hash: redirect.hash,
-      host: redirect.host,
-      hostname: redirect.hostname,
-      href: redirect.href,
-      origin: redirect.origin,
-      password: redirect.password,
-      pathname: redirect.pathname,
-      port: redirect.port,
-      protocol: redirect.protocol,
-      search: redirect.search,
-      searchParams: Object.fromEntries([...redirect.searchParams.entries()]),
-      username: redirect.username,
-    },
-  });
-  */
 };
 
 exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
@@ -73,10 +51,23 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
 
   try {
     const tokenResponse = await axios.post(tokenURL, tokenData.toString());
-    console.log('response', tokenResponse.data);
+
+    const userData = await axios.get('https://api.mercadolibre.com/users/me', {
+      headers: {
+        Authorization: `Bearer ${tokenResponse.data.access_token}`,
+      },
+    });
 
     // fazer request para /me
     // validar e-mail nos e-mails habilitados para essa integration
+
+    console.log('userData', userData.data);
+
+    await db('sessions')
+      .where({ session_id: session.session_id })
+      .update({
+        integration_token: tokenResponse.data,
+      });
 
     // res.json({ ok: 200, response: tokenResponse.data });
   } catch (err) {

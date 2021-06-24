@@ -1,8 +1,11 @@
+const axiosDebugLog = require('axios-debug-log');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const nunjucks = require('nunjucks');
 const router = require('./routes');
 const connect = require('./database');
+
+axiosDebugLog({});
 
 const createApp = async () => {
   const app = express();
