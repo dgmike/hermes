@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
-const createToken = Buffer.from(bcrypt.hashSync(bcrypt.genSaltSync(), 10)).toString('base64');
+const createToken = () =>
+  Buffer.from(bcrypt.hashSync(bcrypt.genSaltSync(), 10)).toString('base64');
 
 exports.oauth = async (req, res) => {
   const { db } = req.app.locals;
