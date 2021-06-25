@@ -37,8 +37,9 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
     .where({ token: query.state })
     .first();
 
+  const validationToken = createToken();
   const redirect_uri = new URL(session.redirect_uri);
-  redirect_uri.searchParams.append('code', query.code);
+  redirect_uri.searchParams.append('code', validationToken);
   redirect_uri.searchParams.append('state', session.state);
 
   // check token
@@ -81,7 +82,7 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
     await db('sessions')
       .where({ session_id: session.session_id })
       .update({
-        validation_token: createToken(),
+        validation_token: validationToken,
         integration_token: tokenResponse.data,
       });
 
