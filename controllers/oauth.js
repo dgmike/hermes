@@ -94,13 +94,19 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
 };
 
 exports.token = async ({ res, query, body, params, app: { locals: { db } } }) => {
-  console.log({ validation_token: body.code })
-
   const session = await db('sessions')
     .where({ validation_token: body.code })
     .first();
 
-  console.log('session', session);
+  if (!session) {
+    res
+      .status(400)
+      .json({
+        success: false,
+        message: 'session token not found',
+      });
+    return;
+  }
 
-  res.status(400).json(session.integration_token);
+  res.json(session.integration_token);
 };
