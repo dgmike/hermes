@@ -97,5 +97,5 @@ exports.token = async ({ res, query, body, params, app: { locals: { db } } }) =>
     .where({ validation_token: body.code })
     .first();
 
-  res.status(400).json(session);
+  res.status(400).json(session.integration_token);
 };
