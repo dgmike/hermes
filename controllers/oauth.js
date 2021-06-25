@@ -93,5 +93,5 @@ exports.token = async ({ res, query, body, params, app: { locals: { db } } }) =>
   console.log('query', query);
   console.log('params', params);
 
-  res.json({ ok: 200 });
+  res.status(400).json({ ok: false });
 };
