@@ -1,13 +1,15 @@
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 
+const createToken = Buffer.from(bcrypt.hashSync(bcrypt.genSaltSync(), 10)).toString('base64');
+
 exports.oauth = async (req, res) => {
   const { db } = req.app.locals;
   const integration = await db("integrations")
     .where({ integration_id: `${req.query.client_id}` })
     .first();
 
-  const token = Buffer.from(bcrypt.hashSync(bcrypt.genSaltSync(), 10)).toString('base64');
+  const token = createToken();
 
   await db("sessions")
     .insert({
@@ -78,6 +80,7 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
     await db('sessions')
       .where({ session_id: session.session_id })
       .update({
+        validation_token: createToken(),
         integration_token: tokenResponse.data,
       });
 
@@ -89,9 +92,9 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
 };
 
 exports.token = async ({ res, query, body, params, app: { locals: { db } } }) => {
-  console.log('body', body);
-  console.log('query', query);
-  console.log('params', params);
+  const session = await db('sessions')
+    .where({ validation_token: body.code })
+    .first();
 
-  res.status(400).json({ ok: false });
+  res.status(400).json(session);
 };
