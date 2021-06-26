@@ -75,7 +75,8 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
     console.log('results', typeof parseInt(results), parseInt(results))
 
     if (parseInt(results) <= 0) {
-      res.json({ ok: false });
+      res.redirect(redirect_uri);
+      // res.json({ ok: false });
       return;
     }
 
