@@ -89,7 +89,8 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
     res.redirect(redirect_uri);
   } catch (err) {
     console.error("ERRO", err);
-    res.json({ ok: false });
+    // res.json({ ok: false });
+    res.redirect(redirect_uri);
   }
 };
 
