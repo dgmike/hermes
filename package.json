@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^6.19.3",
+    "@sentry/tracing": "^6.19.3",
     "axios": "^0.21.1",
     "axios-debug-log": "^0.8.2",
     "bcrypt": "^5.0.1",
