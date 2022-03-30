@@ -81,4 +81,9 @@ router.get("/oauth", oauthController.oauth);
 router.get("/oauth2", oauthController.oauth2);
 router.post("/token", oauthController.token);
 
+router.post("/callback", (req, res) => {
+  console.ingo('/callback', { req.body, req.params, req.query });
+  res.json({ ok: true });
+})
+
 module.exports = router;
