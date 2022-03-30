@@ -12,8 +12,6 @@ axiosDebugLog({});
 const createApp = async () => {
   const app = express();
 
-  console.info('process.env', process.env);
-
   Sentry.init({
     dsn: process.env.SENTRY_DSN || '',
     integrations: [
