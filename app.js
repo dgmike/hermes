@@ -26,7 +26,7 @@ const createApp = async () => {
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
     tracesSampleRate: 1.0,
-    release: 'hermes@',
+    release: `${npm_package_name}@${process.env.npm_package_version}`
   });
 
   // RequestHandler creates a separate execution context using domains, so that every
