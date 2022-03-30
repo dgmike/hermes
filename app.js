@@ -12,6 +12,8 @@ axiosDebugLog({});
 const createApp = async () => {
   const app = express();
 
+  console.info('process.env', process.env);
+
   Sentry.init({
     dsn: process.env.SENTRY_DSN || '',
     integrations: [
@@ -24,6 +26,7 @@ const createApp = async () => {
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
     tracesSampleRate: 1.0,
+    release: 'hermes@',
   });
 
   // RequestHandler creates a separate execution context using domains, so that every
