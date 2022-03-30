@@ -1,12 +1,16 @@
 const knex = require('knex');
 
-const {
-  DATABASE_CLIENT: client,
-  DATABASE_URL: url,
-} = process.env;
-
+const env = () => {
+  const {
+    DATABASE_CLIENT: client,
+    DATABASE_URL: url,
+  } = process.env;
+  return { client, url };
+}
 
 const connection = () => {
+  const { client, url } = env();
+
   if (client === 'sqlite3') {
     return { filename: url };
   }
@@ -22,6 +26,8 @@ const connection = () => {
 }
 
 const connect = async () => {
+  const { client, url } = env();
+
   const settings = {
     client,
     connection: connection(),

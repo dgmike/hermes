@@ -96,7 +96,16 @@ exports.oauth2 = async ({ params, query, res, app: { locals: { db } } }) => {
 };
 
 exports.token = async ({ res, query, body, params, app: { locals: { db } } }) => {
-  console.info('token request:', { query, body, params });
+  if (!body.code) {
+    res
+      .status(422)
+      .json({
+        success: false,
+        message: 'body.code is required',
+      });
+    return;
+  }
+
   const session = await db('sessions')
     .where({ validation_token: body.code })
     .first();
