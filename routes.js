@@ -83,7 +83,11 @@ router.post("/token", oauthController.token);
 
 router.post("/callback", (req, res) => {
   console.info('/callback', { body: req.body, params: req.params, query: req.query });
-  res.json({ ok: true });
-})
+  res.status(404).json({ error: true, message: 'resource not found' });
+});
+
+router.get("/debug-sentry", (req, res) => {
+  throw new Error("My first Sentry error!");
+});
 
 module.exports = router;
