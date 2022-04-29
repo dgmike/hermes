@@ -82,7 +82,7 @@ router.get("/oauth2", oauthController.oauth2);
 router.post("/token", oauthController.token);
 
 router.post("/callback", (req, res) => {
-  console.info('/callback', { body: req.body, params: req.params, query: req.query });
+  // console.info('/callback', { body: req.body, params: req.params, query: req.query });
   res.status(404).json({ error: true, message: 'resource not found' });
 });
 
